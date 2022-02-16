@@ -59,6 +59,8 @@ for ii=1:length(myears)
     text(0.025, 0.9, alphabet{ii}, 'Units', 'normalized', 'FontSize', fs)
     grid on
     box off
+    
+    set(ax, 'FontSize', fs)
 end
 
 % Manually set xlims to the appropriately matched dates
