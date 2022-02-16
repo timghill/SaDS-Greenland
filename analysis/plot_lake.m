@@ -1,102 +1,80 @@
+%% Plot moulin amplitude in 2011, 2012, 2015, 2016
+
+% Set figure fontsize
 fs = 8;
 
-addpath(genpath('~/sglads/SaDS/SaDS/functions/'))
+% Add paths to necessary functions
+addpath(genpath('../data/'));
 
-fig = figure('Units', 'centimeters', 'Position', [5, 5, 15, 10]);
-T = tiledlayout(2, 2, 'TileSpacing', 'tight', 'Padding', 'compact');
-
+% Set years to plot
 myears = [2011, 2012, 2015, 2016];
-tmins = [datetime(2011, 1, 1)];
-tmaxs = [datetime(2011, 1, 1)];
+alphabet = {'a (2011)', 'b (2012)', 'c (2015)', 'd (2016)'};
 
-alphabet = {'(a) 2011', '(b) 2012', '(c) 2015', '(d) 2016'};
-ii_map = [1, 3, 2, 4];
-
-% lake_indices = [3233, 2317, 3387, 2274];
+% Default color order
 lake_indices = [3233, 3387, 2274, 2317];
-dem = load('../data/greenland_refined_elevation.mat');
-lake_elevations = dem.z_element(lake_indices);
-
-for ii=1:length(myears)
-% for ii=1
-    outs = load(sprintf('../outputs/greenland_%d_regrow.mat', myears(ii)));
-    dmesh = outs.params.dmesh;
-    year = myears(ii);
-
-    %% Plot lake levels
-    colors = [
-    0.3516    0.6250    0.5508
+lake_colors = [0.3516    0.6250    0.5508
     0.8906    0.5547    0.3438
     0.7812    0.4375    0.4922
     0.2969    0.5703    0.6914];
 
-    colororder(colors)
 
+fig = figure('Units', 'centimeters', 'Position', [5, 5, 15, 10]);
+colororder(lake_colors)
+T = tiledlayout(2, 2, 'TileSpacing', 'tight', 'Padding', 'compact');
+for ii=1:length(myears)
+    outs = load(sprintf('../outputs/greenland_%d_regrow.mat', myears(ii)));
+
+    % Find correct subplot index since panels are ordered 2011, 2015, 2012,
+    % 2016
+    ii_map = [1, 3, 2, 4];
+    ax = nexttile(ii_map(ii));
+    hold on
+    
+    % Convert time in seconds to a datetime array
     tt = outs.outputs.tt/86400;
-    times = datetime(year, 1, 1) + days(tt);
+    times = datetime(myears(ii), 1, 1) + days(tt);
     
-    tmins(ii) = datetime(2011, month(times(1)), day(times(1)));
-    tmaxs(ii) = datetime(2011, month(times(end)), day(times(end)));
-    
-    
-    nexttile(ii_map(ii));
     plot(times, outs.outputs.hs(lake_indices, :), 'linewidth', 1)
-%     xlim([times(1), times(end)])
-    ticklocs = [datetime(year, 6, 1), datetime(year, 7, 1), datetime(year, 8, 1), datetime(year, 9, 1)];
 
+    % Axes options
+    ticklocs = [datetime(myears(ii), 6, 1), datetime(myears(ii), 7, 1), datetime(myears(ii), 8, 1), datetime(myears(ii), 9, 1)];
     xticks(ticklocs)
     
-    text(0.025, 0.9, alphabet{ii}, 'Units', 'normalized', 'FontSize', fs)
-    grid on
-    
-    set(gca, 'FontSize', fs)
-    
-    
-    if ii==3 || ii==4
-        set(gca, 'YTickLabels', [])
-    end
-    
-    if ii_map(ii)<3
-        set(gca, 'XTickLabels', [])
-    end
-    
-    box off
-    
-    minticks = [datetime(year, 6, 1), datetime(year, 6, 15), datetime(year, 7, 1),...
-            datetime(year, 7, 15), datetime(year, 8, 1), datetime(year, 8, 15), datetime(year, 9, 1)];
-    hax = gca;
-    hax.MinorGridLineStyle = '-';
-    set(hax, 'XMinorGrid', 'on')
-    hax.XAxis.MinorTickValues = minticks;
+    % Set minor tick locations
+    minticks = [datetime(myears(ii), 5, 15), datetime(myears(ii), 6, 1), datetime(myears(ii), 6, 15), datetime(myears(ii), 7, 1),...
+            datetime(myears(ii), 7, 15), datetime(myears(ii), 8, 1), datetime(myears(ii), 8, 15), datetime(myears(ii), 9, 1)];
+    ax.MinorGridLineStyle = '-';
+    ax.XMinorGrid = 'on';
+    ax.XAxis.MinorTickValues = minticks;
     
     ylim([0, 3.5])
+    text(0.025, 0.9, alphabet{ii}, 'Units', 'normalized', 'FontSize', fs)
+    grid on
+    box off
 end
 
-tt_min_left = min(tmins([1, 2]));
-tt_min_left = datetime(2012, month(tt_min_left), day(tt_min_left));
-tt_max_left = max(tmaxs([1, 2]));
-tt_max_left = datetime(2012, month(tt_max_left), day(tt_max_left));
+% Manually set xlims to the appropriately matched dates
+xlim(nexttile(1), [datetime(2011, 5, 26), datetime(2011, 9, 4)])
+xlim(nexttile(3), [datetime(2012, 5, 26), datetime(2012, 9, 4)])
 
-tt_min_right = min(tmins([3, 4]));
-tt_max_right = max(tmaxs([3, 4]));
-
-tt_min_right = datetime(2016, month(tt_min_right), day(tt_min_right));
-tt_max_right = datetime(2016, month(tt_max_right), day(tt_max_right));
-
-xlim(nexttile(1), [tt_min_left - years(1), tt_max_left - years(1)])
-xlim(nexttile(3), [tt_min_left, tt_max_left])
-
-xlim(nexttile(2), [tt_min_right - years(1), tt_max_right - years(1)])
-xlim(nexttile(4), [tt_min_right, tt_max_right])
+xlim(nexttile(2), [datetime(2015, 5, 9), datetime(2015, 9, 14)])
+xlim(nexttile(4), [datetime(2016, 5, 9), datetime(2016, 9, 14)])
 
 nexttile(1)
 ylabel('Lake depth (m)', 'FontSize', fs)
+set(gca, 'XTickLabels', [])
+
+nexttile(2)
+set(gca, 'YTickLabels', [])
+set(gca, 'XTickLabels', [])
 
 nexttile(3)
 ylabel('Lake depth (m)', 'FontSize', fs)
 
+nexttile(4)
+set(gca, 'YTickLabels', [])
 
-% Fix tick labels
+% Fix tick labels - this removes the year from the xaxis tick labels
 ax3 = nexttile(3);
 ax3.XTickLabel = ax3.XTickLabel;
 
@@ -105,27 +83,3 @@ ax4.XTickLabel = ax4.XTickLabel;
 
 print('figures/lake_depth', '-dpng', '-r600')
 print('figures/lake_depth', '-depsc')
-
-%% CODE TO FIND LAKES
-% figure
-% element_plot(dmesh, outs.outputs.hs(:, tindex), 'EdgeColor', 'none')
-% colormap(cmocean('dense'));
-% hold on
-% 
-% XX = [585142, 7446240,
-%       602204, 7438570,
-%       586209, 7438030,
-%       590996, 7442950];
-% 
-% lake_indices = [];
-% for i=1:4
-%     xs = XX(i, :);
-%     dists = sqrt( sum((dmesh.tri.elements - xs).^2, 2));
-%     near_neighs = find(dists<250);
-%     [maxdepth, index] = max(outs.outputs.hs(near_neighs, tindex));
-%     lake_indices = [lake_indices, near_neighs(index)];
-% end
-% 
-% lake_indices;
-% 
-% plot(dmesh.tri.elements(lake_indices, 1), dmesh.tri.elements(lake_indices, 2), 'kx')

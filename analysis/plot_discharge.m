@@ -1,132 +1,101 @@
 %% Plot moulin discharge in 2011, 2012, 2015, 2016
 
+% Set figure fontsize
 fs = 8;
 
-addpath(genpath('~/sglads/SaDS/SaDS/functions/'));
-addpath(genpath('../'))
+% Add paths to necessary functions
+addpath(genpath('../data/'));
 
+% Set years to plot
 myears = [2011, 2012, 2015, 2016];
-tmins = [datetime(2011, 1, 1)];
-tmaxs = [datetime(2011, 1, 1)];
-
-fig = figure('Units', 'centimeters', 'Position', [5, 5, 15, 10]);
-left_color = [.5 .5 0];
-right_color = [0 .5 .5];
-
-cc = colororder;
-
 alphabet = {'a (2011)', 'b (2012)', 'c (2015)', 'd (2016)'};
 
+fig = figure('Units', 'centimeters', 'Position', [5, 5, 15, 10]);
 T = tiledlayout(2, 2, 'TileSpacing', 'tight', 'Padding', 'compact');
-
 for ii=1:length(myears)
-% for ii=1
     outs = load(sprintf('../outputs/greenland_%d_regrow.mat', myears(ii)));
     
+    % Get handle to RACMO melt data
     melt_fun = get_RACMO_melt(myears(ii));
 
-
+    % Find correct subplot index since panels are ordered 2011, 2015, 2012,
+    % 2016
     ii_map = [1, 3, 2, 4];
-%     subplot(2, 2, ii_map(ii))
-    nexttile(ii_map(ii))
+    ax = nexttile(ii_map(ii));
     
+    % Convert time in seconds to a datetime array
     tt = outs.outputs.tt/86400;
     times = datetime(myears(ii), 1, 1) + days(tt);
-%     ticklocs = [datetime(year, 6, 1), datetime(year, 6, 15), datetime(year, 7, 1),...
-%             datetime(year, 7, 15), datetime(year, 8, 1), datetime(year, 8, 15), datetime(year, 9, 1)];
-    ticklocs = [datetime(myears(ii), 6, 1), datetime(myears(ii), 7, 1), datetime(myears(ii), 8, 1), datetime(myears(ii), 9, 1)];
     
-    tmins(ii) = datetime(2011, month(times(1)), day(times(1)));
-    tmaxs(ii) = datetime(2011, month(times(end)), day(times(end)));
-    
+    % Compute domain-averaged and 24-hour moving average melt
     melt = mean(melt_fun(outs.outputs.tt)*86400);
     melt = movmean(melt, 12);
-    plot(times, melt*80/0.08, 'Color', 'k')
-    xticks(ticklocs)
-    hold on
     
-    set(gca,'ColorOrderIndex',1, 'FontSize', fs)
-    plot(times, outs.outputs.m_moulin)
+    % Resert color index so moulins correpond to colors in overview figure
+    set(ax,'ColorOrderIndex',1, 'FontSize', fs)
+    plot(times, outs.outputs.m_moulin)  % Plot moulin discharge
 
-    xlim([times(1), times(end)])
+    % Axes options
+    ticklocs = [datetime(myears(ii), 6, 1), datetime(myears(ii), 7, 1), datetime(myears(ii), 8, 1), datetime(myears(ii), 9, 1)];
+    xticks(ticklocs)
+    
+    % Set minor tick locations
+    minticks = [datetime(myears(ii), 5, 15), datetime(myears(ii), 6, 1), datetime(myears(ii), 6, 15), datetime(myears(ii), 7, 1),...
+            datetime(myears(ii), 7, 15), datetime(myears(ii), 8, 1), datetime(myears(ii), 8, 15), datetime(myears(ii), 9, 1)];
+    ax.MinorGridLineStyle = '-';
+    ax.XMinorGrid = 'on';
+    ax.XAxis.MinorTickValues = minticks;
+    
     ylim([0, 80])
     text(0.025, 0.9, alphabet{ii}, 'Units', 'normalized', 'FontSize', fs)
     grid on
-    
-    
-    if ii==3 || ii==4
-        set(gca, 'YTickLabels', [])
-    end
-    
-    if ii_map(ii)<3
-        set(gca, 'XTickLabels', [])
-    end
-    
+    box off
     
     yyaxis right
-    set(gca, 'YColor', 'k')
-%     plot(outs.outputs.tt/86400, melt, 'Color', 'k', 'LineWidth', 1)
-    if ii==1 || ii==2
-        set(gca, 'YTickLabels', [])
-    else
-        ylabel('Melt (m/day)', 'FontSize', fs)
-    end
+    set(ax, 'YColor', 'k')
+    plot(times, melt, 'k')
     ylim([0, 0.08])
-    
-    box off
-    minticks = [datetime(myears(ii), 6, 1), datetime(myears(ii), 6, 15), datetime(myears(ii), 7, 1),...
-            datetime(myears(ii), 7, 15), datetime(myears(ii), 8, 1), datetime(myears(ii), 8, 15), datetime(myears(ii), 9, 1)];
-    hax = gca;
-    hax.MinorGridLineStyle = '-';
-    set(hax, 'XMinorGrid', 'on')
-    hax.XAxis.MinorTickValues = minticks;
 end
 
-% linkaxes([nexttile(1), nexttile(2)], 'y')
-% linkaxes([nexttile(3), nexttile(4)], 'y')
-% 
-% linkaxes([nexttile(1), nexttile(3)], 'x')
-% linkaxes([nexttile(2), nexttile(4)], 'x')
+% Manually set xlims to the appropriately matched dates
+xlim(nexttile(1), [datetime(2011, 5, 26), datetime(2011, 9, 4)])
+xlim(nexttile(3), [datetime(2012, 5, 26), datetime(2012, 9, 4)])
 
-tt_min_left = min(tmins([1, 2]));
-tt_min_left = datetime(2012, month(tt_min_left), day(tt_min_left));
-tt_max_left = max(tmaxs([1, 2]));
-tt_max_left = datetime(2012, month(tt_max_left), day(tt_max_left));
-
-tt_min_right = min(tmins([3, 4]));
-tt_max_right = max(tmaxs([3, 4]));
-
-tt_min_right = datetime(2016, month(tt_min_right), day(tt_min_right));
-tt_max_right = datetime(2016, month(tt_max_right), day(tt_max_right));
-
-xlim(nexttile(1), [tt_min_left - years(1), tt_max_left - years(1)])
-xlim(nexttile(3), [tt_min_left, tt_max_left])
-
-xlim(nexttile(2), [tt_min_right - years(1), tt_max_right - years(1)])
-xlim(nexttile(4), [tt_min_right, tt_max_right])
-
-nexttile(3)
-% xlabel('Day of year')
-
-nexttile(4)
-% xlabel('Day of year')
+xlim(nexttile(2), [datetime(2015, 5, 9), datetime(2015, 9, 14)])
+xlim(nexttile(4), [datetime(2016, 5, 9), datetime(2016, 9, 14)])
 
 nexttile(1)
 yyaxis left
 ylabel('Discharge (m^3/s)', 'FontSize', fs)
+set(gca, 'XTickLabels', [])
+yyaxis right
+set(gca, 'YTickLabels', [])
+
+nexttile(2)
+yyaxis left
+set(gca, 'YTickLabels', [])
+set(gca, 'XTickLabels', [])
+yyaxis right
+ylabel('Melt (m w.e./day)')
 
 nexttile(3)
 yyaxis left
 ylabel('Discharge (m^3/s)', 'FontSize', fs)
+yyaxis right
+set(gca, 'YTickLabels', [])
 
-% Fix tick labels
+nexttile(4)
+yyaxis left
+set(gca, 'YTickLabels', [])
+yyaxis right
+ylabel('Melt (m w.e./day)')
+
+% Fix tick labels - this removes the year from the xaxis tick labels
 ax3 = nexttile(3);
 ax3.XTickLabel = ax3.XTickLabel;
 
 ax4 = nexttile(4);
 ax4.XTickLabel = ax4.XTickLabel;
-
-% fig.text(0.5, 0.1, 'Day of year', 'Units', 'no
 
 print('figures/discharge', '-dpng', '-r600')
 print('figures/discharge', '-depsc')
