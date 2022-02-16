@@ -5,6 +5,7 @@ fs = 8;
 
 % Add paths to necessary functions
 addpath(genpath('../data/'));
+addpath(genpath('/home/tghill/projects/def-c3dow/tghill/SaDS/MMATH/cases/greenland/data/RACMO'))
 
 % Set years to plot
 myears = [2011, 2012, 2015, 2016];
@@ -53,6 +54,7 @@ for ii=1:length(myears)
     
     yyaxis right
     set(ax, 'YColor', 'k')
+    set(gca, 'FontSize', fs)
     plot(times, melt, 'k')
     ylim([0, 0.08])
 end
@@ -76,7 +78,7 @@ yyaxis left
 set(gca, 'YTickLabels', [])
 set(gca, 'XTickLabels', [])
 yyaxis right
-ylabel('Melt (m w.e./day)')
+ylabel('Melt (m w.e./day)', 'FontSize', fs)
 
 nexttile(3)
 yyaxis left
@@ -88,7 +90,7 @@ nexttile(4)
 yyaxis left
 set(gca, 'YTickLabels', [])
 yyaxis right
-ylabel('Melt (m w.e./day)')
+ylabel('Melt (m w.e./day)', 'FontSize', fs)
 
 % Fix tick labels - this removes the year from the xaxis tick labels
 ax3 = nexttile(3);
