@@ -62,7 +62,7 @@ ylabel('Amplitude (m^3/s)', 'FontSize', fs)
 ticklocs_2012 = [datetime(2012, 6, 1), datetime(2012, 7, 1), datetime(2012, 8, 1), datetime(2012, 9, 1)];
 minticks_2012 = [datetime(2012, 6, 1), datetime(2012, 6, 15), datetime(2012, 7, 1),...
         datetime(2012, 7, 15), datetime(2012, 8, 1), datetime(2012, 8, 15), datetime(2012, 9, 1)];
-ylim([0, 3.5])
+ylim([0, 15])
 
 a2 = nexttile(2);
 hold on
@@ -76,7 +76,7 @@ xlim([times_2015(1), times_2015(end)])
 ticklocs_2015 = [datetime(2015, 6, 1), datetime(2015, 7, 1), datetime(2015, 8, 1), datetime(2015, 9, 1)];
 minticks_2015 = [datetime(2015, 6, 1), datetime(2015, 6, 15), datetime(2015, 7, 1),...
         datetime(2015, 7, 15), datetime(2015, 8, 1), datetime(2015, 8, 15), datetime(2015, 9, 1)];
-ylim([0, 3.5])
+ylim([0, 15])
 
 linkaxes([a1, a2], 'y');
 
@@ -85,12 +85,14 @@ a3 = nexttile(5);
 plot(times_2012, outs_2012.outputs.hs(lake_indices, :))
 colororder(a3, lake_colors)
 ylabel('Lake depth (m)')
+ylim([0, 3.5])
 
 a4 = nexttile(6);
 plot(times_2015, outs_2015.outputs.hs(lake_indices, :))
 colororder(a4, lake_colors)
 a4.YTickLabels = [];
 linkaxes([a3, a4], 'y')
+ylim([0, 3.5])
 
 %% Moulin lags
 t1_2012 = tt_2012(1)*86400;
