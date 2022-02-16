@@ -89,6 +89,7 @@ set(gca, 'XTickLabels', [])
 
 nexttile(2)
 set(gca, 'YTickLabels', [])
+set(gca, 'XTickLabels', [])
 
 nexttile(3)
 ylabel('T_{min} (hours)', 'FontSize', fs)
