@@ -1,8 +1,16 @@
 fs = 8;
 mlw = 1.5;
 
-addpath(genpath('~/sglads/SaDS/SaDS/functions/'))
+moulin_colors = [   5.3125000e-01   7.9687500e-01   9.2968750e-01
+   6.6406250e-02   4.6484375e-01   1.9921875e-01
+   8.6328125e-01   7.9687500e-01   4.6484375e-01
+   7.9687500e-01   3.9843750e-01   4.6484375e-01
+   1.9921875e-01   1.3281250e-01   5.3125000e-01
+   6.6406250e-01   2.6562500e-01   5.9765625e-01
+   2.6562500e-01   6.6406250e-01   5.9765625e-01];
 
+% addpath(genpath('~/sglads/SaDS/SaDS/functions/'))
+addpath(genpath('/media/tghill/Seagate Backup Plus Drive/tim/MMATH/SaDS/SaDS/functions/'))
 dem = load('../data/greenland_refined_elevation.mat');
 dmesh = load('../data/meshes/greenland_refined_mesh.mat');
 dmesh.tri.elements = dmesh.tri.elements/1e3;
@@ -11,7 +19,7 @@ outs = load('../outputs/greenland_2012_regrow.mat');
 
 tindex = 562;
 
-figure('Units', 'centimeters', 'Position', [2,2, 19, 7.5]);
+figure('Units', 'centimeters', 'Position', [2,2, 17, 6.71]);
 
 % T = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
@@ -63,7 +71,7 @@ moulins = find(outs.params.moulins==1);
 lake_indices = [3233, 3387, 2274, 2317];
 
 
-cc = colororder;
+cc = moulin_colors;
 nonlake_moulins = [2, 3, 6];
 for ii=1:length(moulins)
     if ~ismember(ii, nonlake_moulins)
@@ -113,7 +121,7 @@ ylims = [7.43e3, 7.455e3];
 % ylims = R.YWorldLimits/1e3;
 % ylims(1) = 7431270/1e3;
 ylim(ylims);
-text(0.025, 0.95, 'a', 'Units', 'normalized', 'FontSize', fs)
+text(0.025, 0.95, '(a)', 'Units', 'normalized', 'FontSize', fs)
 
 % text(-0.15, 1.025, 'b', 'Units', 'normalized', 'FontSize', fs)
 
@@ -161,7 +169,7 @@ moulins = find(outs.params.moulins==1);
 lake_indices = [3233, 3387, 2274, 2317];
 
 
-cc = colororder;
+% cc = colororder;
 for ii=1:length(moulins)
     if ~ismember(ii, nonlake_moulins)
         mec = [0, 0, 0];
@@ -203,7 +211,7 @@ xlim([577.5, 607.5])
 ylim([7430, 7455])
 
 
-text(0.025, 0.95, 'b', 'Units', 'normalized', 'FontSize', fs)
+text(0.025, 0.95, '(b)', 'Units', 'normalized', 'FontSize', fs)
 
 % T.InnerPosition = [0.075, 0.075, 0.8, 0.85];
 

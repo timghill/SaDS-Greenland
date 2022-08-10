@@ -12,7 +12,7 @@ lake = outs.outputs.hs(3233, :);
 moulin = full(outs.outputs.m_moulin(7, :));
 tt = outs.outputs.tt(:);
 
-figure('Units', 'centimeters', 'Position', [10, 10, 19, 8])
+figure('Units', 'centimeters', 'Position', [10, 10, 17, 7.2])
 T = tiledlayout(1, 2, 'Padding', 'compact', 'TileSpacing', 'compact');
 
 %% Second tile is lake/moulin relationship
@@ -20,7 +20,7 @@ nexttile(2)
 scatter(lake, moulin, 20, tt/86400, 'filled', 'o', 'MarkerFaceAlpha', 0.8)
 colormap(cmocean('matter'))
 xlabel('Lake depth (m)')
-ylabel('Moulin discharge (m^3/s)')
+ylabel('Moulin discharge (m^3 s^{-1})')
 grid on
 hold on
 
@@ -36,7 +36,7 @@ xx = linspace(xmin, xmax, 10);
 f = polyval(P, xx);
 plot(xx, f, 'k', 'LineWidth', 1.5)
 
-text(0.025 , 0.95, 'b', 'Units', 'normalized', 'FontSize', fs)
+text(0.025 , 0.95, '(b)', 'Units', 'normalized', 'FontSize', fs)
 set(gca, 'FontSize', fs)
 
 %% Plot sheet/channel water mass
@@ -59,10 +59,14 @@ cbar.Layout.Tile = 'east';
 cbar.Label.String = 'Day of 2012';
 cbar.Label.FontSize = fs;
 grid on
-text(0.025 , 0.95, 'a', 'Units', 'normalized', 'FontSize', fs)
+text(0.025 , 0.95, '(a)', 'Units', 'normalized', 'FontSize', fs)
 
 % Adjust plot position
 T.InnerPosition = [0.067, 0.1, 0.8, 0.85];
 
 print('figures/lake_moulin_phase', '-dpng', '-r600')
 print('figures/lake_moulin_phase', '-depsc')
+
+% Correlation
+M = [xfit(xfit>2.5); yfit(xfit>2.5)]';
+corrcoef(M).^2

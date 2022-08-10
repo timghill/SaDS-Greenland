@@ -8,7 +8,7 @@ addpath(genpath('../data/'));
 
 % Set years to plot
 myears = [2011, 2012, 2015, 2016];
-alphabet = {'a (2011)', 'b (2012)', 'c (2015)', 'd (2016)'};
+alphabet = {'(a) 2011', '(b) 2012', '(c) 2015', '(d) 2015'};
 
 % Default color order
 lake_indices = [3233, 3387, 2274, 2317];
@@ -18,7 +18,7 @@ lake_colors = [0.3516    0.6250    0.5508
     0.2969    0.5703    0.6914];
 
 
-fig = figure('Units', 'centimeters', 'Position', [5, 5, 15, 10]);
+fig = figure('Units', 'centimeters', 'Position', [5, 5, 17, 11]);
 colororder(lake_colors)
 T = tiledlayout(2, 2, 'TileSpacing', 'tight', 'Padding', 'compact');
 for ii=1:length(myears)

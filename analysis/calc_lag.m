@@ -15,11 +15,16 @@ for ii=1:Nday:(length(tt)+1-Nday)
     tt_day = tt(ii:ii+Nday - 1);
     for jj=1:size(m_moulin, 1)
         daily_discharge = m_moulin(jj, ii:ii+Nday-1);
-        [~, jj_peak] = min(daily_discharge);
+        [~, jj_peak] = max(daily_discharge);
+        
         tt_peak = tt_day(jj_peak);
-        lag = (tt_peak - tt_day(1));
-
-%         lags(jj, kk) = lag/3600 - 12;
+        lag = tt_peak - tt_day(1);
+        
+%         % Lag based on max
+        lag = lag - 3600*15 - 60*22;
+        
+%       % Lag based on min
+%         lag = lag - 3600*3 - 60*22;
         lags(jj, kk) = lag/3600;
     end
     ttnew(kk) = tt_day(1);

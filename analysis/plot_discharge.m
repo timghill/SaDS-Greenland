@@ -3,15 +3,23 @@
 % Set figure fontsize
 fs = 8;
 
+moulin_colors = [   5.3125000e-01   7.9687500e-01   9.2968750e-01
+   6.6406250e-02   4.6484375e-01   1.9921875e-01
+   8.6328125e-01   7.9687500e-01   4.6484375e-01
+   7.9687500e-01   3.9843750e-01   4.6484375e-01
+   1.9921875e-01   1.3281250e-01   5.3125000e-01
+   6.6406250e-01   2.6562500e-01   5.9765625e-01
+   2.6562500e-01   6.6406250e-01   5.9765625e-01];
+
 % Add paths to necessary functions
 addpath(genpath('../data/'));
 addpath(genpath('/home/tghill/projects/def-c3dow/tghill/SaDS/MMATH/cases/greenland/data/RACMO'))
 
 % Set years to plot
 myears = [2011, 2012, 2015, 2016];
-alphabet = {'a (2011)', 'b (2012)', 'c (2015)', 'd (2016)'};
+alphabet = {'(a) 2011', '(b) 2012', '(c) 2015', '(d) 2015'};
 
-fig = figure('Units', 'centimeters', 'Position', [5, 5, 15, 10]);
+fig = figure('Units', 'centimeters', 'Position', [5, 5, 17, 11]);
 T = tiledlayout(2, 2, 'TileSpacing', 'tight', 'Padding', 'compact');
 for ii=1:length(myears)
     outs = load(sprintf('../outputs/greenland_%d_regrow.mat', myears(ii)));
@@ -34,6 +42,8 @@ for ii=1:length(myears)
     
     % Resert color index so moulins correpond to colors in overview figure
     set(ax,'ColorOrderIndex',1, 'FontSize', fs)
+    set(gca, 'ColorOrder', moulin_colors)
+    hold on
     plot(times, outs.outputs.m_moulin)  % Plot moulin discharge
 
     % Axes options
@@ -68,7 +78,7 @@ xlim(nexttile(4), [datetime(2016, 5, 9), datetime(2016, 9, 14)])
 
 nexttile(1)
 yyaxis left
-ylabel('Discharge (m^3/s)', 'FontSize', fs)
+ylabel('Discharge (m^3 s^{-1})', 'FontSize', fs)
 set(gca, 'XTickLabels', [])
 yyaxis right
 set(gca, 'YTickLabels', [])
@@ -78,11 +88,11 @@ yyaxis left
 set(gca, 'YTickLabels', [])
 set(gca, 'XTickLabels', [])
 yyaxis right
-ylabel('Melt (m w.e./day)', 'FontSize', fs)
+ylabel('Melt (m w.e. day^{-1})', 'FontSize', fs)
 
 nexttile(3)
 yyaxis left
-ylabel('Discharge (m^3/s)', 'FontSize', fs)
+ylabel('Discharge (m^3 s^{-1})', 'FontSize', fs)
 yyaxis right
 set(gca, 'YTickLabels', [])
 
@@ -90,7 +100,7 @@ nexttile(4)
 yyaxis left
 set(gca, 'YTickLabels', [])
 yyaxis right
-ylabel('Melt (m w.e./day)', 'FontSize', fs)
+ylabel('Melt (m w.e. day^{-1})', 'FontSize', fs)
 
 % Fix tick labels - this removes the year from the xaxis tick labels
 ax3 = nexttile(3);
