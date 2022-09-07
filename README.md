@@ -7,17 +7,13 @@ This package contains model outputs and analysis code from the Subaerial Drainag
 
 ## Instructions
 
+Download the `tar.gz` file, and extract to your desired location.
 
-
-
------------------------------------
-
-
-This directory contains the necessary output and data files, and Matlab plotting functions and scripts to analyze SaDs model outputs.
-
-Matlab files are in the `analysis/` directory. Figures are saved to the `analysis/figures/` directory.
+Model outputs are stored in the `outputs/` directory. The `analysis/` directory contains matlab scripts to analyze the model outputs.
 
 You will need the Matlab [cmoocean](https://www.mathworks.com/matlabcentral/fileexchange/57773-cmocean-perceptually-uniform-colormaps) and [palettes](https://github.com/timghill/palettes) packages. Otherwise, change colormaps as required to built-in alternatives.
+
+RACMO model outputs are *not* embedded within this repository. Please contact the RACMO maintainers for the current version.
 
 ----
 Tim Hill, 2022
