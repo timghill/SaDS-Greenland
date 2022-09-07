@@ -25,12 +25,14 @@ grid on
 hold on
 
 % Compute a linear fit through data where moulin discharge > 30 m3/s
-xfit = lake(moulin>30);
-yfit = moulin(moulin>30);
+% xfit = lake(moulin>30);
+% yfit = moulin(moulin>30);
+xfit = lake(lake>=1.75);
+yfit = moulin(lake>=1.75);
 P = polyfit(xfit, yfit, 1);
 
 % Plot the linear fit
-xmin = -P(2)/P(1);
+xmin = 1.75;
 xmax = max(lake);
 xx = linspace(xmin, xmax, 10);
 f = polyval(P, xx);
@@ -62,11 +64,14 @@ grid on
 text(0.025 , 0.95, '(a)', 'Units', 'normalized', 'FontSize', fs)
 
 % Adjust plot position
-T.InnerPosition = [0.067, 0.1, 0.8, 0.85];
+T.InnerPosition = [0.067, 0.12, 0.8, 0.8];
 
 print('figures/lake_moulin_phase', '-dpng', '-r600')
 print('figures/lake_moulin_phase', '-depsc')
 
 % Correlation
+M_low = [xfit; yfit]';
+corrcoef(M_low).^2
+
 M = [xfit(xfit>2.5); yfit(xfit>2.5)]';
 corrcoef(M).^2

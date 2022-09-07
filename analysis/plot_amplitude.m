@@ -21,7 +21,7 @@ cord = [   5.3125000e-01   7.9687500e-01   9.2968750e-01
 
 % Make equivalent semi-transparent colors
 ctransp = cord;
-ctransp(:, 4) = 0.3;
+ctransp(:, 4) = 0.67;
 
 fig = figure('Units', 'centimeters', 'Position', [5, 5, 17, 11]);
 T = tiledlayout(2, 2, 'TileSpacing', 'tight', 'Padding', 'compact');

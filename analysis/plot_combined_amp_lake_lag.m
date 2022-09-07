@@ -28,7 +28,7 @@ moulin_colors = [   5.3125000e-01   7.9687500e-01   9.2968750e-01
 
 % Define semi-transparent colors
 ctransp = moulin_colors;
-ctransp(:, 4) = 0.33;
+ctransp(:, 4) = 0.67;
 
 % Explicitly compute datetime arrays from time in seconds
 tt_2012 = outs_2012.outputs.tt/86400;
@@ -69,7 +69,7 @@ hold on
 for ii=1:7
     plot(times_2012, amp_2012(ii, :), 'Color', ctransp(ii, :))
 end
-plot(times_2012, amp_2012_mean)
+plot(times_2012, amp_2012_mean, 'LineWidth', 1)
 ylabel('Amplitude (m^3 s^{-1})', 'FontSize', fs)
 ticklocs_2012 = [datetime(2012, 6, 1), datetime(2012, 7, 1), datetime(2012, 8, 1), datetime(2012, 9, 1)];
 minticks_2012 = [datetime(2012, 6, 1), datetime(2012, 6, 15), datetime(2012, 7, 1),...
@@ -90,7 +90,7 @@ hold on
 for ii=1:7
     plot(times_2015, amp_2015(ii, :), 'Color', ctransp(ii, :))
 end
-plot(times_2015, amp_2015_mean)
+plot(times_2015, amp_2015_mean, 'LineWidth', 1)
 set(a2, 'YTickLabels', []);
 % grid on
 xlim([times_2015(1), times_2015(end)])
@@ -120,7 +120,7 @@ melt_2015 = movmean(melt_2015, 12);
 a3 = nexttile(5);
 hold on
 for jj=1:length(lake_indices)
-    plot(times_2012, outs_2012.outputs.hs(lake_indices(jj), :), 'Color', lake_colors(jj, :))
+    plot(times_2012, outs_2012.outputs.hs(lake_indices(jj), :), 'Color', lake_colors(jj, :), 'LineWidth', 1)
 end
 % colororder(a3, lake_colors)
 ylabel('Lake depth (m)')
@@ -129,7 +129,7 @@ ylim([0, 3.5])
 a4 = nexttile(6);
 hold on
 for jj=1:length(lake_indices)
-    plot(times_2015, outs_2015.outputs.hs(lake_indices(jj), :), 'Color', lake_colors(jj, :))
+    plot(times_2015, outs_2015.outputs.hs(lake_indices(jj), :), 'Color', lake_colors(jj, :), 'LineWidth', 1)
 end
 colororder(a4, lake_colors)
 a4.YTickLabels = [];
@@ -193,7 +193,7 @@ end
 
 lakes = [5, 7];
 for jj=1:size(lags_2012_mean, 1)
-    plot(times_lag_2012, lags_2012_mean(jj, :), 'Color', moulin_colors(lakes(jj) , :))
+    plot(times_lag_2012, lags_2012_mean(jj, :), 'Color', moulin_colors(lakes(jj) , :), 'LineWidth', 1)
 end
 % grid on
 colororder(a5, moulin_colors([5, 7], :))
@@ -208,7 +208,7 @@ for ii=1:2
     plot(times_lag_2015(mask_2015), lags_2015_masked(ii, :), 'Color', lag_ctrans(ii, :))
 end
 for jj=1:2
-    plot(times_lag_2015, lags_2015_mean(jj, :), 'Color', moulin_colors(lakes(jj), :))
+    plot(times_lag_2015, lags_2015_mean(jj, :), 'Color', moulin_colors(lakes(jj), :), 'LineWidth', 1)
 end
 
 % grid on
@@ -235,7 +235,7 @@ for ii=[1, 3, 5]
     yyaxis right
     set(gca, 'YColor', 'k')
     set(gca, 'FontSize', fs)
-    plot(times_2012, melt_2012, 'Color', 0.4*ones(4, 1))
+    plot(times_2012, melt_2012, 'Color', [0.*ones(1,3), 0.5], 'linestyle', ':')
     ylim(gca, [0, 0.08])
     set(gca, 'YTickLabels', {})
     hold on
@@ -260,10 +260,10 @@ for jj=[2, 4, 6]
     yyaxis right
     set(gca, 'YColor', 'k')
     set(gca, 'FontSize', fs)
-    plot(times_2015, melt_2015, 'Color', 0.4*ones(4, 1));
+    plot(times_2015, melt_2015, 'Color', [0.*ones(1, 3), 0.5], 'linestyle', ':');
     ylim(gca, [0, 0.08])
     if jj==4
-    ylabel('Melt rate (m day^{-1})')
+        ylabel('Melt rate (m day^{-1})')
     end
     hold on
 
